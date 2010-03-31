@@ -37,7 +37,7 @@ public class BPigModel {
             FileNotFoundException
     {
         BPStrandFoldWithBases strand;
-        strand = BPStrandFactory.createFromCTFile(newStrand);
+        strand = BPStrandFactory.createFromFile(newStrand);
         return ourStrand.addFold(strand);
     }
 
