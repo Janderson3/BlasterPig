@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package blasterpig;
+package blasterpig.drawing;
 
+import blasterpig.strands.BPStrand;
+import blasterpig.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
@@ -15,16 +17,15 @@ import java.awt.geom.*;
  *
  * @author blackMamba
  */
-public class DrawingStrand extends BPStrand{
+public class StrandScribbler{
 
-    final int imageHeight = 600;
-    final int imageWidth = 600;
-    final int radius = (imageHeight - 2)/2;
+    final static int imageHeight = 600;
+    final static int imageWidth = 600;
+    final static int radius = (imageHeight - 2)/2;
 
-    public BufferedImage drawFold(int index)
+    public static BufferedImage drawCircleFold(BPStrand theStrand, int index)
     {
-        BPStrandFold drawingStrand = folds.get(index);
-        int strandLength = strand.length();
+        int strandLength = theStrand.getLength();
         BufferedImage retImage =
                 new BufferedImage(imageHeight, imageWidth,
                 BufferedImage.TYPE_4BYTE_ABGR);
@@ -36,10 +37,11 @@ public class DrawingStrand extends BPStrand{
         Point firstBase, middlePoint, secondBase;
         double thetaFirst, thetaLast, thetaMiddle, scaleFactor;
         int pairing;
-        for(int i=1; i<=drawingStrand.getLength(); i++)
+        for(int i=1; i<=strandLength; i++)
         {
-            pairing = drawingStrand.getPairingAt(i);
+            pairing = theStrand.getPairingOfStrandAtIndex(index, i);
 
+            
             if(pairing > i)
             {
                 thetaFirst = (i/((double)strandLength)) * 2* Math.PI;

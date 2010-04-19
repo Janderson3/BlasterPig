@@ -27,6 +27,7 @@ public class BlasterPigFrame extends javax.swing.JFrame {
 
         strandList.setModel(huston.getStrandListModel());
         drawingPane.setController(huston);
+        autoSortMenuItem.setSelected(false);
     }
 
     /** This method is called from within the constructor to
@@ -42,16 +43,19 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         viewControll = new javax.swing.JPanel();
         ClusterPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        addSrandsButton = new javax.swing.JButton();
         removeStrands = new javax.swing.JButton();
-        clearStrands = new javax.swing.JButton();
+        moveStrandUp = new javax.swing.JButton();
+        moveStrandDown = new javax.swing.JButton();
         strandPane = new javax.swing.JScrollPane();
         strandList = new javax.swing.JList();
         viewPanel = new javax.swing.JPanel();
         drawingPane = new blasterpig.BPigDrawingPane();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        addStrandMenuItem = new javax.swing.JMenuItem();
+        clearStrandsMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        autoSortMenuItem = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,19 +63,12 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         viewControll.setLayout(viewControllLayout);
         viewControllLayout.setHorizontalGroup(
             viewControllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 254, Short.MAX_VALUE)
+            .addGap(0, 257, Short.MAX_VALUE)
         );
         viewControllLayout.setVerticalGroup(
             viewControllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
+            .addGap(0, 383, Short.MAX_VALUE)
         );
-
-        addSrandsButton.setText("Add");
-        addSrandsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSrandsButtonActionPerformed(evt);
-            }
-        });
 
         removeStrands.setText("Remove");
         removeStrands.addActionListener(new java.awt.event.ActionListener() {
@@ -80,10 +77,17 @@ public class BlasterPigFrame extends javax.swing.JFrame {
             }
         });
 
-        clearStrands.setText("Clear");
-        clearStrands.addActionListener(new java.awt.event.ActionListener() {
+        moveStrandUp.setText("^");
+        moveStrandUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearStrandsActionPerformed(evt);
+                moveStrandUpActionPerformed(evt);
+            }
+        });
+
+        moveStrandDown.setText("v");
+        moveStrandDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveStrandDownActionPerformed(evt);
             }
         });
 
@@ -91,22 +95,19 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(addSrandsButton, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(removeStrands)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(clearStrands, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
+                .addComponent(moveStrandDown)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(moveStrandUp))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addSrandsButton)
-                    .addComponent(clearStrands)
-                    .addComponent(removeStrands)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(removeStrands)
+                .addComponent(moveStrandUp)
+                .addComponent(moveStrandDown))
         );
 
         strandList.setModel(new javax.swing.AbstractListModel() {
@@ -125,7 +126,7 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         ClusterPanel.setLayout(ClusterPanelLayout);
         ClusterPanelLayout.setHorizontalGroup(
             ClusterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(strandPane, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+            .addComponent(strandPane, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         ClusterPanelLayout.setVerticalGroup(
@@ -162,7 +163,7 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         );
         drawingPaneLayout.setVerticalGroup(
             drawingPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGap(0, 661, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout viewPanelLayout = new javax.swing.GroupLayout(viewPanel);
@@ -177,9 +178,36 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         );
 
         fileMenu.setText("File");
+
+        addStrandMenuItem.setText("Add Strands");
+        addStrandMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addStrandMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(addStrandMenuItem);
+
+        clearStrandsMenuItem.setText("Clear Strands");
+        clearStrandsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearStrandsMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(clearStrandsMenuItem);
+
         mainMenuBar.add(fileMenu);
 
         editMenu.setText("Edit");
+
+        autoSortMenuItem.setSelected(true);
+        autoSortMenuItem.setText("Auto Sort");
+        autoSortMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autoSortMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(autoSortMenuItem);
+
         mainMenuBar.add(editMenu);
 
         setJMenuBar(mainMenuBar);
@@ -202,10 +230,6 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addSrandsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSrandsButtonActionPerformed
-       addStrands();
-    }//GEN-LAST:event_addSrandsButtonActionPerformed
-
     private void removeStrandsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeStrandsActionPerformed
        int selection = strandList.getSelectedIndex();
        if(selection != -1)
@@ -214,20 +238,30 @@ public class BlasterPigFrame extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_removeStrandsActionPerformed
 
-    public int getCurrentlySelectedStrand()
-    {
-        return strandList.getSelectedIndex();
-    }
-
-    private void clearStrandsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearStrandsActionPerformed
-
-         huston.clearStrands();
-    }//GEN-LAST:event_clearStrandsActionPerformed
 
     private void strandListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_strandListValueChanged
-        // TODO add your handling code here:
         drawingPane.repaint();
     }//GEN-LAST:event_strandListValueChanged
+
+    private void clearStrandsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearStrandsMenuItemActionPerformed
+        huston.clearStrands();
+    }//GEN-LAST:event_clearStrandsMenuItemActionPerformed
+
+    private void addStrandMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStrandMenuItemActionPerformed
+        addStrands();
+    }//GEN-LAST:event_addStrandMenuItemActionPerformed
+
+    private void moveStrandDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveStrandDownActionPerformed
+        huston.moveStrandDown();
+    }//GEN-LAST:event_moveStrandDownActionPerformed
+
+    private void moveStrandUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveStrandUpActionPerformed
+        huston.moveStrandUp();
+    }//GEN-LAST:event_moveStrandUpActionPerformed
+
+    private void autoSortMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoSortMenuItemActionPerformed
+        huston.setSort(autoSortMenuItem.getState());
+    }//GEN-LAST:event_autoSortMenuItemActionPerformed
 
     /**
     * @param args the command line arguments
@@ -242,14 +276,17 @@ public class BlasterPigFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ClusterPanel;
-    private javax.swing.JButton addSrandsButton;
-    private javax.swing.JButton clearStrands;
+    private javax.swing.JMenuItem addStrandMenuItem;
+    private javax.swing.JCheckBoxMenuItem autoSortMenuItem;
+    private javax.swing.JMenuItem clearStrandsMenuItem;
     private javax.swing.JPanel controlPanel;
     private blasterpig.BPigDrawingPane drawingPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuBar mainMenuBar;
+    private javax.swing.JButton moveStrandDown;
+    private javax.swing.JButton moveStrandUp;
     private javax.swing.JButton removeStrands;
     private javax.swing.JList strandList;
     private javax.swing.JScrollPane strandPane;
@@ -264,4 +301,17 @@ public class BlasterPigFrame extends javax.swing.JFrame {
 
        huston.addStrandFromFileArray(chooser.getSelectedFiles());
     }
+
+
+    public int getCurrentlySelectedStrand()
+    {
+        return strandList.getSelectedIndex();
+    }
+
+    public void setSelectedStrand(int i)
+    {
+        strandList.setSelectedIndex(i);
+    }
+
+
 }

@@ -3,9 +3,12 @@
  * and open the template in the editor.
  */
 
-package blasterpig;
+package blasterpig.strands;
 
 
+import blasterpig.exceptions.BaseConflictException;
+import blasterpig.strands.BPStrandFold;
+import blasterpig.strands.BPStrandFoldWithBases;
 import java.util.*;
 import javax.swing.*;
 
@@ -18,7 +21,7 @@ public class BPStrand {
     private String name;
     protected StringBuffer strand;
     protected ArrayList<BPStrandFold> folds;
-    private DefaultListModel listModel;
+    protected DefaultListModel listModel;
 
 
     public BPStrand(String name)
@@ -62,7 +65,6 @@ public class BPStrand {
             {
               throw new BaseConflictException();
             }
-            
                
         }
         /* If we make it here, all's peachy add to array and return 0*/
@@ -71,18 +73,60 @@ public class BPStrand {
         return 0;
     }
 
-    public void removeFold(int i)
+    /*
+     * That the fold was already added using addFold is a precondition
+     * for using this function, insertFold does not check if the fold is
+     * valid.
+     */
+
+    private void insertFold(BPStrandFold fold, int i)
     {
+        folds.add(i, fold);
+        listModel.add(i, fold.getName());
+    }
+
+    public boolean moveFoldUp(int i)
+    {
+        BPStrandFold fold = null;
+        if(i > 0)
+        {
+            fold = removeFold(i);
+            insertFold(fold, i-1);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean moveFoldDown(int i)
+    {
+        BPStrandFold fold = null;
+        if(i < folds.size())
+        {
+            fold = removeFold(i);
+            insertFold(fold, i+1);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public BPStrandFold removeFold(int i)
+    {
+        BPStrandFold retStrand = null;
         if(folds.isEmpty())
         {
-            return;
+            return retStrand;
         }
-        folds.remove(i);
+        retStrand = folds.remove(i);
         listModel.remove(i);
         if(folds.isEmpty())
         {
             strand = new StringBuffer();
         }
+        return retStrand;
     }
 
     public void clearFolds()
@@ -114,7 +158,7 @@ public class BPStrand {
      *
      * @param a first base
      * @param b second base
-     * @return true if a match, false otherwised
+     * @return true if a match, false otherwise
      */
     private boolean compareBases(Character a, Character b)
     {
@@ -133,6 +177,22 @@ public class BPStrand {
 
     }
 
+    public int getLength()
+    {
+        return strand.length();
+    }
+
+    /**
+     * Returns the pairing of the requested strand at the requested base
+     *
+     * @param strandDex desired strand
+     * @param baseDex desired base
+     * @return
+     */
+    public int getPairingOfStrandAtIndex(int strandDex, int baseDex)
+    {
+        return folds.get(strandDex).getPairingAt(baseDex);
+    }
 
 
 }

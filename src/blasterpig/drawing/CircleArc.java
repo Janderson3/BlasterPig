@@ -1,6 +1,6 @@
 
 
-package blasterpig;
+package blasterpig.drawing;
 
 
 import java.awt.Point;

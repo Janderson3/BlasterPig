@@ -5,6 +5,11 @@
 
 package blasterpig;
 
+import blasterpig.strands.SortableStrand;
+import blasterpig.exceptions.BaseConflictException;
+import blasterpig.strands.BPStrandFactory;
+import blasterpig.strands.BPStrandFoldWithBases;
+import blasterpig.drawing.StrandScribbler;
 import javax.swing.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
@@ -15,11 +20,11 @@ import java.awt.image.BufferedImage;
  */
 public class BPigModel {
 
-    private DrawingStrand ourStrand;
+    private SortableStrand ourStrand;
 
     public BPigModel()
     {
-        ourStrand = new DrawingStrand();
+        ourStrand = new SortableStrand();
     }
     
     public void removeFold(int i)
@@ -43,8 +48,7 @@ public class BPigModel {
 
     public BufferedImage drawStrand(int i)
     {
-        return //ourStrand.circleTester();
-                ourStrand.drawFold(i);
+        return  StrandScribbler.drawCircleFold(ourStrand, i);
     }
 
     public DefaultListModel getListModel()
@@ -55,6 +59,20 @@ public class BPigModel {
     public String parenRepOfStrand(int i)
     {
         return ourStrand.parenFold(i);
+    }
+
+    public boolean moveFoldUp(int i)
+    {
+        return ourStrand.moveFoldUp(i);
+    }
+
+    public boolean moveFoldDown(int i)
+    {
+        return ourStrand.moveFoldDown(i);
+    }
+
+    public void setSort(boolean sort){
+       ourStrand.prefixSort(sort);
     }
 
 }

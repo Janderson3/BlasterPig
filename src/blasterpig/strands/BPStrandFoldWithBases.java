@@ -1,9 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package blasterpig;
+package blasterpig.strands;
 
 import java.util.*;
 /**
@@ -13,27 +9,19 @@ import java.util.*;
 public class BPStrandFoldWithBases extends BPStrandFold {
 
    private String bases;
-   private String name;
 
     public BPStrandFoldWithBases (String name,
             int off,
             ArrayList<Integer> pairs,
             ArrayList<Character> bases)
     {
-        super(off, pairs);
+        super(off, pairs, name);
         char[] buffer = new char[bases.size()];
         for(int i=0; i<bases.size(); i++)
         {
             buffer[i] = bases.get(i);
         }
         this.bases = new String(buffer);
-
-        this.name=name;
-    }
-
-    public String getName()
-    {
-        return name;
     }
 
     public BPStrandFoldWithBases(String name,
@@ -45,7 +33,7 @@ public class BPStrandFoldWithBases extends BPStrandFold {
 
     public char getBaseAt(int baseNumber)
     {
-        return bases.charAt(baseNumber-offset);
+        return bases.charAt(baseNumber-this.getOffset());
     }
 
     public String stringBases()

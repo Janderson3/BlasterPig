@@ -41,10 +41,13 @@ public class BPigDrawingPane extends javax.swing.JPanel {
         Graphics2D g2 = (Graphics2D)g;
         BufferedImage drawnStrand;
 
-        drawnStrand = huston.drawFold();
-
-        if(hasController && drawnStrand != null)
-            g2.drawImage(drawnStrand, null, 1, 1);
+        
+        if(hasController){
+            drawnStrand = huston.drawFold();
+            if(drawnStrand != null){
+                g2.drawImage(drawnStrand, null, 1, 1);
+            }
+        }
 
     }
 

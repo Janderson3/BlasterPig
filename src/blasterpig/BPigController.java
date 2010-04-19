@@ -6,6 +6,7 @@
 package blasterpig;
 
 
+import blasterpig.exceptions.BaseConflictException;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.swing.*;
@@ -71,6 +72,30 @@ public class BPigController {
         else{
             return null;
         }
+    }
+
+    public void moveStrandUp()
+    {
+        int selection = frameRefrence.getCurrentlySelectedStrand();
+
+        if(model.moveFoldUp(selection)){
+            frameRefrence.setSelectedStrand(selection-1);
+        }
+
+
+    }
+
+    public void moveStrandDown()
+    {
+        int selection = frameRefrence.getCurrentlySelectedStrand();
+        if(model.moveFoldDown(selection)){
+            frameRefrence.setSelectedStrand(selection+1);
+        }
+
+    }
+
+    public void setSort(boolean sort){
+        model.setSort(sort);
     }
    
 }

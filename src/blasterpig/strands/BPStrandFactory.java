@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package blasterpig;
+package blasterpig.strands;
 
 /**
  *
@@ -48,7 +48,9 @@ public class BPStrandFactory {
         FileInputStream fstream = new FileInputStream(bpFile);
         Scanner fileScanner = new Scanner(fstream);
         Scanner lineScanner;
-        fileScanner.nextLine(); //Throw out first line
+        for(int i=0; i<4; i++){
+            fileScanner.nextLine(); //Throw out first four lines
+        }   
         boolean first = true;
         int offset = 1;
 
