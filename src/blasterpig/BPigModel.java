@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 public class BPigModel {
 
     private SortableStrand ourStrand;
+    int lastDrawnIndex = -1;
+    int drawingIndex = -1;
 
     public BPigModel()
     {
@@ -48,7 +50,16 @@ public class BPigModel {
 
     public BufferedImage drawStrand(int i)
     {
-        return  StrandScribbler.drawCircleFold(ourStrand, i);
+        if(i != drawingIndex){
+            lastDrawnIndex = drawingIndex;
+            drawingIndex = i;
+        }
+        if(lastDrawnIndex == -1){
+            return  StrandScribbler.drawCircleFold(ourStrand, i);
+        }
+        else{
+            return StrandScribbler.drawCircleFold(ourStrand, drawingIndex, lastDrawnIndex);
+        }
     }
 
     public DefaultListModel getListModel()
