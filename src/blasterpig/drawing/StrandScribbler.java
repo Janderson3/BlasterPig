@@ -23,7 +23,7 @@ public class StrandScribbler{
 
     final static int imageHeight = 700;
     final static int imageWidth = 700;
-    final static double buffer = 0.10;
+    final static double buffer = 0.15;
     final static double radius = (imageHeight*(1-buffer))/2;
     final static Color bothColor = Color.black;
     final static Color firstColor = Color.green;

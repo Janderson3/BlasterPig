@@ -94,6 +94,10 @@ public class BPigController {
 
     }
 
+    public void setComparativeView(boolean view){
+        model.setComparativeView(view);
+    }
+
     public void setSort(boolean sort){
         model.setSort(sort);
     }

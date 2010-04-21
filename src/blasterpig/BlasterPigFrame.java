@@ -27,7 +27,7 @@ public class BlasterPigFrame extends javax.swing.JFrame {
 
         strandList.setModel(huston.getStrandListModel());
         drawingPane.setController(huston);
-        autoSortMenuItem.setSelected(false);
+        comparativeFoldingMenuItem.setSelected(false);
     }
 
     /** This method is called from within the constructor to
@@ -55,7 +55,9 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         addStrandMenuItem = new javax.swing.JMenuItem();
         clearStrandsMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        autoSortMenuItem = new javax.swing.JCheckBoxMenuItem();
+        prefixSortMenuItem = new javax.swing.JMenuItem();
+        viewMenu = new javax.swing.JMenu();
+        comparativeFoldingMenuItem = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -158,6 +160,8 @@ public class BlasterPigFrame extends javax.swing.JFrame {
                 .addComponent(viewControll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        drawingPane.setPreferredSize(new java.awt.Dimension(700, 700));
+
         javax.swing.GroupLayout drawingPaneLayout = new javax.swing.GroupLayout(drawingPane);
         drawingPane.setLayout(drawingPaneLayout);
         drawingPaneLayout.setHorizontalGroup(
@@ -175,11 +179,11 @@ public class BlasterPigFrame extends javax.swing.JFrame {
             viewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(viewPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(drawingPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(drawingPane, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE))
         );
         viewPanelLayout.setVerticalGroup(
             viewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(drawingPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(drawingPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
         );
 
         fileMenu.setText("File");
@@ -204,16 +208,28 @@ public class BlasterPigFrame extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
-        autoSortMenuItem.setSelected(true);
-        autoSortMenuItem.setText("Auto Sort");
-        autoSortMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        prefixSortMenuItem.setText("Prefix Sort");
+        prefixSortMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                autoSortMenuItemActionPerformed(evt);
+                prefixSortMenuItemActionPerformed(evt);
             }
         });
-        editMenu.add(autoSortMenuItem);
+        editMenu.add(prefixSortMenuItem);
 
         mainMenuBar.add(editMenu);
+
+        viewMenu.setText("View");
+
+        comparativeFoldingMenuItem.setSelected(true);
+        comparativeFoldingMenuItem.setText("Comparative Folding");
+        comparativeFoldingMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comparativeFoldingMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(comparativeFoldingMenuItem);
+
+        mainMenuBar.add(viewMenu);
 
         setJMenuBar(mainMenuBar);
 
@@ -267,9 +283,13 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         huston.moveStrandUp();
     }//GEN-LAST:event_moveStrandUpActionPerformed
 
-    private void autoSortMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoSortMenuItemActionPerformed
-        huston.setSort(autoSortMenuItem.getState());
-    }//GEN-LAST:event_autoSortMenuItemActionPerformed
+    private void comparativeFoldingMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comparativeFoldingMenuItemActionPerformed
+        huston.setComparativeView(comparativeFoldingMenuItem.getState());
+    }//GEN-LAST:event_comparativeFoldingMenuItemActionPerformed
+
+    private void prefixSortMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prefixSortMenuItemActionPerformed
+        huston.setSort(true);
+    }//GEN-LAST:event_prefixSortMenuItemActionPerformed
 
     /**
     * @param args the command line arguments
@@ -285,8 +305,8 @@ public class BlasterPigFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ClusterPanel;
     private javax.swing.JMenuItem addStrandMenuItem;
-    private javax.swing.JCheckBoxMenuItem autoSortMenuItem;
     private javax.swing.JMenuItem clearStrandsMenuItem;
+    private javax.swing.JCheckBoxMenuItem comparativeFoldingMenuItem;
     private javax.swing.JPanel controlPanel;
     private blasterpig.BPigDrawingPane drawingPane;
     private javax.swing.JMenu editMenu;
@@ -295,10 +315,12 @@ public class BlasterPigFrame extends javax.swing.JFrame {
     private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JButton moveStrandDown;
     private javax.swing.JButton moveStrandUp;
+    private javax.swing.JMenuItem prefixSortMenuItem;
     private javax.swing.JButton removeStrands;
     private javax.swing.JList strandList;
     private javax.swing.JScrollPane strandPane;
     private javax.swing.JPanel viewControll;
+    private javax.swing.JMenu viewMenu;
     private javax.swing.JPanel viewPanel;
     // End of variables declaration//GEN-END:variables
 

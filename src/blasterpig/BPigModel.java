@@ -21,8 +21,9 @@ import java.awt.image.BufferedImage;
 public class BPigModel {
 
     private SortableStrand ourStrand;
-    int lastDrawnIndex = -1;
-    int drawingIndex = -1;
+    private int lastDrawnIndex = -1;
+    private int drawingIndex = -1;
+    private boolean comparativeView = false;
 
     public BPigModel()
     {
@@ -54,7 +55,7 @@ public class BPigModel {
             lastDrawnIndex = drawingIndex;
             drawingIndex = i;
         }
-        if(lastDrawnIndex == -1){
+        if(!comparativeView || lastDrawnIndex == -1){
             return  StrandScribbler.drawCircleFold(ourStrand, i);
         }
         else{
@@ -84,6 +85,10 @@ public class BPigModel {
 
     public void setSort(boolean sort){
        ourStrand.prefixSort(sort);
+    }
+
+    public void setComparativeView(boolean view){
+        this.comparativeView = view;
     }
 
 }
