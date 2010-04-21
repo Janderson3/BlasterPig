@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.*;
 import java.awt.RenderingHints;
+import java.awt.Font;
+import java.awt.FontMetrics;
 
 /**
  *
@@ -19,10 +21,10 @@ import java.awt.RenderingHints;
  */
 public class StrandScribbler{
 
-    final static int imageHeight = 600;
-    final static int imageWidth = 600;
-    final static int buffer = 30;
-    final static int radius = (imageHeight - buffer)/2;
+    final static int imageHeight = 700;
+    final static int imageWidth = 700;
+    final static double buffer = 0.10;
+    final static double radius = (imageHeight*(1-buffer))/2;
     final static Color bothColor = Color.black;
     final static Color firstColor = Color.green;
     final static Color secondColor = Color.red;
@@ -30,11 +32,12 @@ public class StrandScribbler{
     final static float origin = -90;
     final static int approxFreqOfNumbers = 10;
     final static int tickLength = 5;
+    final static int fontdistaneFromTic = 2;
 
     private static void circleSetup(Graphics2D g, int length) {
-        Arc2D.Double a = new Arc2D.Double(buffer,buffer,
-                imageWidth - buffer,
-                imageHeight - buffer,
+        Arc2D.Double a = new Arc2D.Double((buffer/2)*imageWidth,(buffer/2)*imageHeight,
+                imageWidth*(1-buffer),
+                imageHeight*(1-buffer),
                 origin + degreeGap/2,
                 360 - degreeGap,
                 Arc2D.OPEN);
@@ -42,17 +45,20 @@ public class StrandScribbler{
 
         int nearestInt = (int)(length / ((360 - degreeGap) / approxFreqOfNumbers));
         int nearestFive;
-        if(nearestInt % 5 >= 3){
-            nearestFive = nearestInt - (nearestInt % 5);
+        int mod = nearestInt % 5;
+        if (mod < 0){
+            mod = mod+5;
+        }
+        if(mod >= 3){
+            nearestFive = nearestInt - mod;
         }
         else{
-            nearestFive = nearestInt + (nearestInt % 5);
+            nearestFive = nearestInt + (5 - mod);
         }
-        
-       // g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
+       
         for(int i = nearestFive; i<length; i = i + nearestFive){
-            double theta = degreeForBaseNumber(i, length);
+            double theta = radiansForBaseNumber(i, length);
             Point start = new Point((int)Math.round(radius* Math.cos(theta)) + getCenter(),
                     (int)Math.round(radius * Math.sin(theta))+getCenter());
             Point end = new Point((int)Math.round((radius + tickLength)* Math.cos(theta)) + getCenter(),
@@ -60,7 +66,24 @@ public class StrandScribbler{
             g.drawLine(start.x, start.y, end.x, end.y);
         }
 
-        //g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        Font font = new Font("Serif", Font.PLAIN, 12);
+        g.setFont(font);
+        FontMetrics fontMetrics = g.getFontMetrics();
+
+       g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+
+        for(int i=nearestFive; i<length; i = i + nearestFive){
+            double theta = radiansForBaseNumber(i, length);
+            int offset = fontMetrics.getHeight() +fontdistaneFromTic + tickLength;
+            Point center = new Point((int)Math.round((radius +offset)* Math.cos(theta)) + getCenter(),
+                    (int)Math.round((radius + offset) * Math.sin(theta)) + getCenter());
+            String daString = String.valueOf(i);
+            g.drawString(daString, center.x, center.y);
+        }
+
+
+      g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
     }
 
     public static BufferedImage drawCircleFold(BPStrand theStrand, int firstDex, int secondDex){
@@ -72,7 +95,7 @@ public class StrandScribbler{
         g.setColor(Color.black);
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        circleSetup(g, strandLength);
+        
 
         int pairingOne, pairingTwo;
         for(int i=1; i<=strandLength; i++)
@@ -99,6 +122,8 @@ public class StrandScribbler{
             }
 
         }
+        g.setColor(Color.black);
+        circleSetup(g, strandLength);
 
         return retImage;
     }
@@ -133,8 +158,8 @@ public class StrandScribbler{
     }
 
     private static void drawBaseArc(int baseOne, int baseTwo, int strandLength, Graphics2D g) {
-        double thetaFirst = degreeForBaseNumber(baseOne, strandLength);
-        double thetaLast = degreeForBaseNumber(baseTwo, strandLength);
+        double thetaFirst = radiansForBaseNumber(baseOne, strandLength);
+        double thetaLast = radiansForBaseNumber(baseTwo, strandLength);
 
 
         Point firstBase =
@@ -187,7 +212,7 @@ public class StrandScribbler{
             g.draw(a);
         }
     }
-    private static double degreeForBaseNumber(int base, int strandLength){
+    private static double radiansForBaseNumber(int base, int strandLength){
         return (base / ((double) strandLength)) *
                 (2 * Math.PI - (degreeGap * Math.PI / (180f)))
                 + (degreeGap/2 - origin) * (Math.PI / (180f));
@@ -198,7 +223,7 @@ public class StrandScribbler{
      * @return
      */
     private static int getCenter(){
-        return buffer + radius;
+        return  (int)(radius + imageHeight*buffer/2);
     }
 
 }
