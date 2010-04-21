@@ -21,11 +21,47 @@ public class StrandScribbler{
 
     final static int imageHeight = 600;
     final static int imageWidth = 600;
-    final static int radius = (imageHeight - 2)/2;
+    final static int buffer = 30;
+    final static int radius = (imageHeight - buffer)/2;
     final static Color bothColor = Color.black;
-    final static Color firstColor = Color.red;
-    final static Color secondColor = Color.blue;
+    final static Color firstColor = Color.green;
+    final static Color secondColor = Color.red;
+    final static float degreeGap = 10;
+    final static float origin = -90;
+    final static int approxFreqOfNumbers = 10;
+    final static int tickLength = 5;
 
+    private static void circleSetup(Graphics2D g, int length) {
+        Arc2D.Double a = new Arc2D.Double(buffer,buffer,
+                imageWidth - buffer,
+                imageHeight - buffer,
+                origin + degreeGap/2,
+                360 - degreeGap,
+                Arc2D.OPEN);
+        g.draw(a);
+
+        int nearestInt = (int)(length / ((360 - degreeGap) / approxFreqOfNumbers));
+        int nearestFive;
+        if(nearestInt % 5 >= 3){
+            nearestFive = nearestInt - (nearestInt % 5);
+        }
+        else{
+            nearestFive = nearestInt + (nearestInt % 5);
+        }
+        
+       // g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        for(int i = nearestFive; i<length; i = i + nearestFive){
+            double theta = degreeForBaseNumber(i, length);
+            Point start = new Point((int)Math.round(radius* Math.cos(theta)) + getCenter(),
+                    (int)Math.round(radius * Math.sin(theta))+getCenter());
+            Point end = new Point((int)Math.round((radius + tickLength)* Math.cos(theta)) + getCenter(),
+                    (int)Math.round((radius + tickLength) * Math.sin(theta)) + getCenter()) ;
+            g.drawLine(start.x, start.y, end.x, end.y);
+        }
+
+        //g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+    }
 
     public static BufferedImage drawCircleFold(BPStrand theStrand, int firstDex, int secondDex){
        int strandLength = theStrand.getLength();
@@ -36,9 +72,7 @@ public class StrandScribbler{
         g.setColor(Color.black);
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        g.drawOval(1, 1, imageWidth -2 , imageHeight -2);
-
+        circleSetup(g, strandLength);
 
         int pairingOne, pairingTwo;
         for(int i=1; i<=strandLength; i++)
@@ -78,8 +112,11 @@ public class StrandScribbler{
                 BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = retImage.createGraphics();
         g.setColor(Color.black);
-        g.drawOval(1, 1, imageWidth -2 , imageHeight -2);
 
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);        
+
+        circleSetup(g, strandLength);
+        
         int pairing;
         for(int i=1; i<=strandLength; i++)
         {
@@ -96,16 +133,16 @@ public class StrandScribbler{
     }
 
     private static void drawBaseArc(int baseOne, int baseTwo, int strandLength, Graphics2D g) {
-        double thetaFirst = (baseOne / ((double) strandLength)) * 2 * Math.PI;
-        double thetaLast = (baseTwo / ((double) strandLength)) * 2 * Math.PI;
+        double thetaFirst = degreeForBaseNumber(baseOne, strandLength);
+        double thetaLast = degreeForBaseNumber(baseTwo, strandLength);
 
 
         Point firstBase =
-                new Point((int) (Math.round(radius * Math.cos(thetaFirst)) + radius),
-                (int) (Math.round(radius * Math.sin(thetaFirst)) + radius));
+                new Point((int) (Math.round(radius * Math.cos(thetaFirst)) + getCenter()),
+                (int) (Math.round(radius * Math.sin(thetaFirst)) + getCenter()));
         Point secondBase =
-                new Point((int) (Math.round(radius * Math.cos(thetaLast) + radius)),
-                (int) (Math.round(radius * Math.sin(thetaLast) + radius)));
+                new Point((int) (Math.round(radius * Math.cos(thetaLast) + getCenter() )),
+                (int) (Math.round(radius * Math.sin(thetaLast) + getCenter())));
 
         //If they're straight across, just draw a line
         if ((baseTwo - baseOne) == strandLength / 2) {
@@ -134,8 +171,8 @@ public class StrandScribbler{
 
 
             Point middlePoint =
-                    new Point((int) (Math.round(scaleFactor * radius * Math.cos(thetaMiddle) + radius)),
-                    (int) (Math.round(scaleFactor * radius * Math.sin(thetaMiddle) + radius)));
+                    new Point((int) (Math.round(scaleFactor * radius * Math.cos(thetaMiddle) + getCenter())),
+                    (int) (Math.round(scaleFactor * radius * Math.sin(thetaMiddle) + getCenter())));
 
             CircleArc tempArc = new CircleArc(firstBase, middlePoint, secondBase);
 
@@ -150,4 +187,18 @@ public class StrandScribbler{
             g.draw(a);
         }
     }
+    private static double degreeForBaseNumber(int base, int strandLength){
+        return (base / ((double) strandLength)) *
+                (2 * Math.PI - (degreeGap * Math.PI / (180f)))
+                + (degreeGap/2 - origin) * (Math.PI / (180f));
+    }
+
+    /**
+     * X and Y coordinates are the same, so this just returns the x or y coordinate.
+     * @return
+     */
+    private static int getCenter(){
+        return buffer + radius;
+    }
+
 }
