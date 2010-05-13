@@ -63,11 +63,11 @@ public class BPigController {
         return model.getListModel();
     }
 
-    public BufferedImage drawFold()
+    public BufferedImage drawFold(int imageWidth, int imageHeight)
     {
         int selection = frameRefrence.getCurrentlySelectedStrand();
         if(selection != -1){
-            return model.drawStrand(selection);
+            return model.drawStrand(selection, imageWidth, imageHeight);
         }
         else{
             return null;

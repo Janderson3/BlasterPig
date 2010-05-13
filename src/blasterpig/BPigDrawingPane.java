@@ -37,13 +37,17 @@ public class BPigDrawingPane extends javax.swing.JPanel {
     @Override
     public void paintComponent(Graphics g)
     {
+        int height = getHeight();
+        int width = getWidth();
+        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         BufferedImage drawnStrand;
 
+
         
         if(hasController){
-            drawnStrand = huston.drawFold();
+            drawnStrand = huston.drawFold(getWidth(), getHeight());
             if(drawnStrand != null){
                 g2.drawImage(drawnStrand, null, 1, 1);
             }

@@ -24,10 +24,12 @@ public class BPigModel {
     private int lastDrawnIndex = -1;
     private int drawingIndex = -1;
     private boolean comparativeView = false;
+    private StrandScribbler scribble;
 
     public BPigModel()
     {
         ourStrand = new SortableStrand();
+        scribble = new StrandScribbler();
     }
     
     public void removeFold(int i)
@@ -49,17 +51,19 @@ public class BPigModel {
         return ourStrand.addFold(strand);
     }
 
-    public BufferedImage drawStrand(int i)
+    public BufferedImage drawStrand(int i, int imageWidth, int imageHeight)
     {
+        scribble.setImageWidth(imageWidth);
+        scribble.setImageHeight(imageHeight);
         if(i != drawingIndex){
             lastDrawnIndex = drawingIndex;
             drawingIndex = i;
         }
         if(!comparativeView || lastDrawnIndex == -1){
-            return  StrandScribbler.drawCircleFold(ourStrand, i);
+            return  scribble.drawCircleFold(ourStrand, i);
         }
         else{
-            return StrandScribbler.drawCircleFold(ourStrand, drawingIndex, lastDrawnIndex);
+            return scribble.drawCircleFold(ourStrand, drawingIndex, lastDrawnIndex);
         }
     }
 
