@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package blasterpig.drawing;
 
@@ -15,10 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.Font;
 import java.awt.FontMetrics;
 
-/**
- *
- * @author blackMamba
- */
+
 public class StrandScribbler{
 
     private int imageHeight = 700;
@@ -32,14 +25,111 @@ public class StrandScribbler{
     private int approxFreqOfNumbers = 10;
     private int tickLength = 5;
     private int fontdistaneFromTic = 2;
-
+    private int effectiveImageHeight = imageHeight;
+    private int effectiveImageWidth = imageWidth;
+    private int offsetX=0;
+    private int offsetY=0;
+    private double zoomFactor = 1;
 
 
     public StrandScribbler(){
     }
 
+
+    public BufferedImage drawCircleFold(BPStrand theStrand, int firstDex, int secondDex){
+        BufferedImage fullImage = drawZoomedCircleFold(theStrand,firstDex,secondDex);
+        BufferedImage retImage = 
+                new BufferedImage(imageHeight, imageWidth, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics2D g = retImage.createGraphics();
+        g.drawRect(0, 0, imageWidth, imageHeight);
+        g.drawImage(fullImage, 0, 0, imageWidth, imageHeight,
+                offsetX, offsetY,
+                offsetX + imageWidth,
+                offsetY + imageHeight,
+                null);
+
+        return retImage;
+    }
+
+   public BufferedImage drawCircleFold(BPStrand theStrand, int index){
+        BufferedImage fullImage = drawZoomedCircleFold(theStrand,index);
+        BufferedImage retImage =
+                new BufferedImage(imageHeight, imageWidth, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics2D g = retImage.createGraphics();
+        g.drawImage(fullImage, 0, 0, imageWidth, imageHeight,
+                offsetX, offsetY,
+                offsetX + imageWidth,
+                offsetY + imageHeight,
+                null);
+
+        return retImage;
+    }
+
+
+    private  BufferedImage drawZoomedCircleFold(BPStrand theStrand, int index)
+    {
+        int strandLength = theStrand.getLength();
+        BufferedImage retImage =
+                new BufferedImage(effectiveImageHeight, effectiveImageWidth,
+                BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics2D g = retImage.createGraphics();
+        g.setColor(Color.black);
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);        
+
+        circleSetup(g, strandLength);
+        
+        int pairing;
+        for(int i=1; i<=strandLength; i++)
+        {
+            pairing = theStrand.getPairingOfStrandAtIndex(index, i);
+
+            
+            if(pairing > i)
+            {
+                drawBaseArc(i, pairing, strandLength, g);
+            }
+        }
+
+        return retImage;
+    }
+
+    public void deltaOffset(int deltaX, int deltaY){
+        offsetX += deltaX;
+        offsetY += deltaY;
+    }
+
+    public void resetDisplay(){
+        setZoomFactor(1);
+        offsetX = 0;
+        offsetY = 0;
+    }
+
+    public void zoomIn(){
+        setZoomFactor(zoomFactor + 0.1);
+    }
+
+
+    public void zoomOut(){
+        if(zoomFactor > 0.5){
+            setZoomFactor(zoomFactor - 0.1);
+        }
+
+    }
+
+
+    private void setZoomFactor(double zoom){
+        zoomFactor = zoom;
+        float xRatioOfCenter = (offsetX + imageWidth/2)/((float)effectiveImageWidth);
+        float yRatioOfCenter = (offsetY + imageHeight/2)/((float)effectiveImageHeight);
+        effectiveImageHeight = (int)(imageHeight * zoom);
+        effectiveImageWidth = (int)(imageWidth * zoom);
+        offsetX = (int)(xRatioOfCenter*effectiveImageWidth) - imageWidth/2;
+        offsetY = (int)(yRatioOfCenter*effectiveImageHeight) - imageHeight/2;
+    }
+
     private void circleSetup(Graphics2D g, int length) {
-        Arc2D.Double a = new Arc2D.Double((buffer/2)*imageWidth,(buffer/2)*imageHeight,
+        Arc2D.Double a = new Arc2D.Double((buffer/2)*effectiveImageWidth,(buffer/2)*effectiveImageHeight,
                 2*getRadius(),
                 2*getRadius(),
                 origin + degreeGap/2,
@@ -60,7 +150,7 @@ public class StrandScribbler{
             nearestFive = nearestInt + (5 - mod);
         }
 
-       
+
         for(int i = nearestFive; i<length; i = i + nearestFive){
             double theta = radiansForBaseNumber(i, length);
             Point start = new Point((int)Math.round(getRadius()* Math.cos(theta)) + getCenterX(),
@@ -90,16 +180,16 @@ public class StrandScribbler{
       g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
     }
 
-    public  BufferedImage drawCircleFold(BPStrand theStrand, int firstDex, int secondDex){
+     private  BufferedImage drawZoomedCircleFold(BPStrand theStrand, int firstDex, int secondDex){
        int strandLength = theStrand.getLength();
         BufferedImage retImage =
-                new BufferedImage(imageHeight, imageWidth,
+                new BufferedImage(effectiveImageHeight, effectiveImageWidth,
                 BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = retImage.createGraphics();
         g.setColor(Color.black);
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
+
 
         int pairingOne, pairingTwo;
         for(int i=1; i<=strandLength; i++)
@@ -128,35 +218,6 @@ public class StrandScribbler{
         }
         g.setColor(Color.black);
         circleSetup(g, strandLength);
-
-        return retImage;
-    }
-
-
-    public  BufferedImage drawCircleFold(BPStrand theStrand, int index)
-    {
-        int strandLength = theStrand.getLength();
-        BufferedImage retImage =
-                new BufferedImage(imageHeight, imageWidth,
-                BufferedImage.TYPE_4BYTE_ABGR);
-        Graphics2D g = retImage.createGraphics();
-        g.setColor(Color.black);
-
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);        
-
-        circleSetup(g, strandLength);
-        
-        int pairing;
-        for(int i=1; i<=strandLength; i++)
-        {
-            pairing = theStrand.getPairingOfStrandAtIndex(index, i);
-
-            
-            if(pairing > i)
-            {
-                drawBaseArc(i, pairing, strandLength, g);
-            }
-        }
 
         return retImage;
     }
@@ -191,10 +252,6 @@ public class StrandScribbler{
 
             if (Math.abs(thetaFirst - thetaLast) > Math.PI) {
                 thetaMiddle += Math.PI;
-                /*           if(thetaMiddle > 2 * Math.PI)
-                {
-                thetaMiddle -= Math.PI*2;
-                }*/
             }
 
 
@@ -216,34 +273,28 @@ public class StrandScribbler{
             g.draw(a);
         }
     }
+
+
     private double radiansForBaseNumber(int base, int strandLength){
         return (base / ((double) strandLength)) *
                 (2 * Math.PI - (degreeGap * Math.PI / (180f)))
                 + (degreeGap/2 - origin) * (Math.PI / (180f));
     }
 
-    /**
-     * X and Y coordinates are the same, so this just returns the x or y coordinate.
-     * @return
-     */
-  /*  private int getCenter(){
-        return  (int)(getRadius() + imageHeight*buffer/2);
-    }*/
-
     private int getCenterX(){
-        return  (int)(getRadius() + imageWidth*buffer/2);
+        return  (int)(getRadius() + effectiveImageWidth*buffer/2);
     }
 
     private int getCenterY(){
-        return  (int)(getRadius() + imageHeight*buffer/2);
+        return  (int)(getRadius() + effectiveImageHeight*buffer/2);
     }
 
     private double getRadius(){
-        if(imageWidth > imageHeight){
-            return (imageHeight*(1-buffer))/2;
+        if(effectiveImageWidth > effectiveImageHeight){
+            return (effectiveImageHeight*(1-buffer))/2;
         }
         else{
-            return (imageWidth*(1-buffer))/2;
+            return (effectiveImageWidth*(1-buffer))/2;
         }
     }
 

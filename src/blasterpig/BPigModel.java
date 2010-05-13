@@ -67,6 +67,18 @@ public class BPigModel {
         }
     }
 
+    public void changeOffset(int deltaX, int deltaY){
+        scribble.deltaOffset(deltaX, deltaY);
+    }
+
+    public void zoomIn(){
+        scribble.zoomIn();
+    }
+
+    public void zoomOut(){
+        scribble.zoomOut();
+    }
+
     public DefaultListModel getListModel()
     {
         return ourStrand.getListModel();

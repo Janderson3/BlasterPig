@@ -19,6 +19,7 @@ import javax.swing.JFileChooser;
 public class BlasterPigFrame extends javax.swing.JFrame {
 
     private BPigController huston;
+
     /** Creates new form BlasterPigFrame */
     public BlasterPigFrame() {
         huston = new BPigController(this);
@@ -28,6 +29,7 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         strandList.setModel(huston.getStrandListModel());
         drawingPane.setController(huston);
         comparativeFoldingMenuItem.setSelected(false);
+        huston.setdrawingFrame(drawingPane);
     }
 
     /** This method is called from within the constructor to
@@ -60,6 +62,14 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         comparativeFoldingMenuItem = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                formKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout viewControllLayout = new javax.swing.GroupLayout(viewControll);
         viewControll.setLayout(viewControllLayout);
@@ -123,6 +133,11 @@ public class BlasterPigFrame extends javax.swing.JFrame {
                 strandListValueChanged(evt);
             }
         });
+        strandList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                strandListKeyPressed(evt);
+            }
+        });
         strandPane.setViewportView(strandList);
 
         javax.swing.GroupLayout ClusterPanelLayout = new javax.swing.GroupLayout(ClusterPanel);
@@ -161,6 +176,11 @@ public class BlasterPigFrame extends javax.swing.JFrame {
         );
 
         drawingPane.setPreferredSize(new java.awt.Dimension(700, 700));
+        drawingPane.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                drawingPaneMouseDragged(evt);
+            }
+        });
 
         javax.swing.GroupLayout drawingPaneLayout = new javax.swing.GroupLayout(drawingPane);
         drawingPane.setLayout(drawingPaneLayout);
@@ -293,6 +313,26 @@ public class BlasterPigFrame extends javax.swing.JFrame {
     private void prefixSortMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prefixSortMenuItemActionPerformed
         huston.setSort(true);
     }//GEN-LAST:event_prefixSortMenuItemActionPerformed
+
+    private void drawingPaneMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_drawingPaneMouseDragged
+        
+    }//GEN-LAST:event_drawingPaneMouseDragged
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+
+    }//GEN-LAST:event_formKeyPressed
+
+    private void formKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyTyped
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_formKeyTyped
+
+    private void strandListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_strandListKeyPressed
+        // TODO add your handling code here:
+        char key = evt.getKeyChar();
+        huston.keyStruck(key);
+        huston.repaint();
+    }//GEN-LAST:event_strandListKeyPressed
 
     /**
     * @param args the command line arguments

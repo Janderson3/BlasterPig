@@ -142,8 +142,7 @@ public class SortableStrand extends BPStrand{
                                }
                            }
                        }
-                       String prefix = firstName.substring(0, endPrefix + 1);;
-                       System.out.println("Prefix: " + prefix);
+                       String prefix = firstName.substring(0, endPrefix + 1);
                        return prefix;
                    }
 

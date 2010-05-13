@@ -18,12 +18,22 @@ public class BPigController {
 
     private BPigModel model;
     private BlasterPigFrame frameRefrence;
+    private JPanel drawingFrame;
 
     public BPigController(BlasterPigFrame controlledFrame)
     {
         model = new BPigModel();
         frameRefrence = controlledFrame;
     }
+
+    public void setdrawingFrame(JPanel frame){
+        drawingFrame = frame;
+    }
+
+    public void repaint(){
+        drawingFrame.repaint();
+    }
+
 
     public void clearStrands()
     {
@@ -33,6 +43,16 @@ public class BPigController {
     public void removeStrand(int i)
     {
         model.removeFold(i);
+    }
+
+    public void keyStruck(char a){
+        if(a == 'w'){
+            model.zoomIn();
+        }
+        else if(a == 's'){
+            model.zoomOut();
+        }
+
     }
 
     public void addStrandFromFileArray(File[] fileArray)
@@ -72,6 +92,10 @@ public class BPigController {
         else{
             return null;
         }
+    }
+
+    public void changeOffset(int deltaX, int deltaY){
+        model.changeOffset(deltaX, deltaY);
     }
 
     public void moveStrandUp()
