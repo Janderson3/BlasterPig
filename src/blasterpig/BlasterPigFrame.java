@@ -12,6 +12,7 @@ package blasterpig;
 
 
 import javax.swing.JFileChooser;
+import java.io.File;
 /**
  *
  * @author blackMamba
@@ -19,6 +20,7 @@ import javax.swing.JFileChooser;
 public class BlasterPigFrame extends javax.swing.JFrame {
 
     private BPigController huston;
+    String filePath = "";
 
     /** Creates new form BlasterPigFrame */
     public BlasterPigFrame() {
@@ -368,11 +370,25 @@ public class BlasterPigFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void addStrands(){
-       JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser;
+        if(filePath.length() == 0){
+            chooser = new JFileChooser();
+        }
+        else{
+            chooser = new JFileChooser(filePath);
+        }
        chooser.setMultiSelectionEnabled(true);
        chooser.showOpenDialog(null);
 
-       huston.addStrandFromFileArray(chooser.getSelectedFiles());
+       File [] fileArr = chooser.getSelectedFiles();
+
+       String tempString = fileArr[0].getAbsolutePath();
+       int lastIndex = tempString.lastIndexOf('/');
+       System.out.println(tempString + "\n" + lastIndex);
+       if(lastIndex != -1){
+            filePath = tempString.substring(0, lastIndex);
+       }
+       huston.addStrandFromFileArray(fileArr);
     }
 
 
